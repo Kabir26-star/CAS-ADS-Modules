@@ -1,7 +1,7 @@
 <h1>CAS ADS Module 4</h1>
 
 
-<p>This repository contains a collection of PDF files related to this module.  
+<p>This Module contains a collection of PDF files related to this module.  
 Each PDF is included for reference, documentation, study, or reporting purposes.</p>
 
 ---
