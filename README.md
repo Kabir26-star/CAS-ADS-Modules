@@ -57,7 +57,3 @@ Or run it in the terminal:
 <h1>Reading Materials</h1>
 <b>cat filename</b>
 
-# Reminder
-If you don't have python dependencies, do run the following command on GitBash: 
-<b>pip install -r requirements.txt</b>
-
