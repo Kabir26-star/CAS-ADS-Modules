@@ -1,4 +1,4 @@
-<h1>CAS ADS Module 4</h1>
+<h1>CAS ADS Module 4: Ethics and Best Practices</h1>
 
 
 <p>This Module contains a collection of PDF files related to this module.  
