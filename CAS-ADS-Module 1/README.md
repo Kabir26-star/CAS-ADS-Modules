@@ -1,13 +1,7 @@
 # Module-1-Assignment
 
-<h1>Hospitilization Data Code</h1>
+<h1>CAS Applied Data Science – Module 1: Data Acquisition and Management</h1>
 
-<p>This notebook is a Data Acquistion and Management assignment (Module 1) that focuses on exploring and visualizing a healthcare dataset</p>
+<p>This repository contains materials and projects for Module 1: Data Acquisition and Management, part of the CAS Applied Data Science program at the University of Bern </p>
 
-<h1>Libraries</h1>
-<ul>
-  <li>Pandas</li>
-  <li>Matplotlib</li>
-  <li>Numpy</li>
- </ul>
 
