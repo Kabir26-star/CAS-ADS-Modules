@@ -1,4 +1,6 @@
 # CAS-ADS-Modules
+<p> This repository contains CAS Materials and Projects. The instructions below, informs how to execute the python files and materials via Gitbash</p>
+
 # 🧭 Guidelines
 
 # 1. Install Required Tools
@@ -49,8 +51,13 @@ Click the Run ▶ button at the top-right corner
 
 Or run it in the terminal:
 
+<h1>Python files</h1>
 <b>python filename.py</b>
+
+<h1>Reading Materials</h1>
+<b>cat filename</b>
 
 # Reminder
 If you don't have python dependencies, do run the following command on GitBash: 
 <b>pip install -r requirements.txt</b>
+
