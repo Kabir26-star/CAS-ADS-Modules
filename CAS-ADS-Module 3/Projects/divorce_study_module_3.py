@@ -23,7 +23,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 
-URL = 'https://raw.githubusercontent.com/Kabir26-star/CAS-ADS-Projects-Kabirdev-Singh-Ramana/main/CAS-ADS-Module%202/divorce_df.csv'
+URL = 'https://github.com/Kabir26-star/CAS-ADS-Module-3/blob/main/divorce_df.csv?raw=true' 
 df = pd.read_csv(URL)
 df
 
@@ -300,6 +300,16 @@ for col in categorical_cols:
     plt.grid(axis='y', linestyle='--', alpha=0.7, color='lightgray')
     plt.tight_layout()
     plt.show()
+
+
+"""Age Distribution"""
+#Age at Marriage distribution
+sns.histplot(x='age_at_marriage', data=df_copy, kde=True, stat='density', bins=30)
+plt.title('Distribution of Age at Marriage')
+plt.xlabel('Age at Marriage')
+plt.ylabel('Density')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()
 
 """**Machine Learning**
 **Linear Regression**
