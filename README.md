@@ -3,8 +3,8 @@
 Each module has its own dedicated folder with code, documentation, and assignments.</p>
 
 <h1>Repository Structure</h1>
-CAS-ADS-Modules/
-│
+<p>CAS-ADS-Modules/
+
 ├── Module1/
 │   └── README.md
 │
@@ -22,7 +22,7 @@ CAS-ADS-Modules/
 │   └── README.md
 └── FinalProject/
     └── README.md
-
+</p>
 
 Each module folder includes:
 
