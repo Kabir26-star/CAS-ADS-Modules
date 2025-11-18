@@ -1,59 +1,37 @@
 # CAS-ADS-Modules
-<p> This repository contains CAS Materials and Projects. The instructions below, informs how to execute the python files and materials via Gitbash</p>
+<p> This repository contains all coursework, exercises, and project work completed as part of the CAS in Applied Data Science (ADS) program.
+Each module has its own dedicated folder with code, documentation, and assignments.</p>
 
-# 🧭 Guidelines
-
-# 1. Install Required Tools
-
-Download and install Git Bash from https://git-scm.com/downloads
-
-Install Visual Studio Code (VS Code) from https://code.visualstudio.com
-
-Install Python from https://python.org/downloads
- (if not already installed)
-
-# 2. Clone the GitHub Repository
-
-Open Git Bash.
-
-Navigate to the folder where you want to save the project:
-
-<b>cd Documents/Projects</b>
-
-
-Run the clone command (replace with your repository link):
-
-<b>git clone https://github.com/yourusername/your-repository.git</b>
-
-# 3. Open the Project in Visual Studio Code
-
-In Git Bash, navigate into the cloned folder:
-
-<b>cd your-repository</b>
+<h1>Repository Structure</h1>
+CAS-ADS-Modules/
+│
+├── Module1/
+│   └── README.md
+│
+├── Module2/
+│   └── README.md
+│
+├── Module3/
+│   └── README.md
+│
+├── Module4/
+│   └── README.md
+│── Module5/
+│   └── README.md
+|── Module6/
+│   └── README.md
+└── FinalProject/
+    └── README.md
 
 
-Launch VS Code directly from Git Bash:
+Each module folder includes:
 
-code .
+Python scripts (.py)
 
+Jupyter notebooks (.ipynb)
 
-(Alternatively, open VS Code → File → Open Folder → select your project folder.)
+Practice exercises
 
-# 4. Run the Python Files
+Data files (if allowed)
 
-In VS Code, open the .py file you want to run.
-
-Make sure Python is installed and selected as the interpreter.
-
-Run the file using one of these options:
-
-Click the Run ▶ button at the top-right corner
-
-Or run it in the terminal:
-
-<h1>Python files</h1>
-<b>python filename.py</b>
-
-<h1>Reading Materials</h1>
-<b>cat filename</b>
-
+Documentation and explanations in a README file
