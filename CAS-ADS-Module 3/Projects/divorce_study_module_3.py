@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-19T20:17:43.599Z
+Conversion Date: 2025-11-19T20:31:23.585Z
 """
 
 import pandas as pd
@@ -559,6 +559,7 @@ if categorical_cols:
 
 
 
+#Creating and training Random Forest model
 model = RandomForestClassifier(n_estimators=100, random_state= 42)
 model.fit(X_train, Y_train)
 
@@ -625,7 +626,7 @@ if categorical_cols:
 
 
 
-#Create and train Logistic Regression model
+#Create and train XGB model
 model = XGBClassifier(n_estimators = 100, learning_rate = 0.1, max_depth = 5, random_state = 42)
 model.fit(X_train,Y_train)
 
@@ -679,7 +680,7 @@ if categorical_cols:
     X_train, x_test = X_train.align(x_test, join='left', axis=1, fill_value=0)
 
 
-#Create and train Logistic Regression model
+#Create and train Random Forest model
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, Y_train)
 
@@ -732,7 +733,7 @@ if categorical_cols:
     # Align columns so train/test have same features (missing columns in test filled with 0)
     X_train, x_test = X_train.align(x_test, join='left', axis=1, fill_value=0)
 
-#Create and train Logistic Regression model
+#Create and train Random Forest model
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, Y_train)
 
