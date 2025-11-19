@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-19T20:31:23.585Z
+Conversion Date: 2025-11-19T20:48:44.257Z
 """
 
 import pandas as pd
@@ -29,7 +29,7 @@ df
 df_copy = df.copy()
 
 print("Dataset copied successfully to df_copy.")
-print(df_copy.head(10))
+display(df_copy.head(10))
 
 # Visualize continuous variables with histograms (excluding 'divorced') by divorced status
 continuous_cols = df_copy.select_dtypes(include=np.number).drop(columns=['divorced'])
@@ -560,10 +560,10 @@ if categorical_cols:
 
 
 #Creating and training Random Forest model
-model = RandomForestClassifier(n_estimators=100, random_state= 42)
-model.fit(X_train, Y_train)
+rf = RandomForestClassifier(n_estimators=100, random_state= 42)
+rf.fit(X_train, Y_train)
 
-y_pred = model.predict(x_test)
+y_pred = rf.predict(x_test)
 
 # Ensure the necessary variables exist (run the Logistic Regression training & prediction cells first)
 try:
@@ -573,8 +573,8 @@ except NameError as e:
     raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
 
 # If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(model, 'predict_proba'):
-    y_prob = model.predict_proba(x_test)[:, 1]
+if hasattr(rf, 'predict_proba'):
+    y_prob = rf.predict_proba(x_test)[:, 1]
     # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
     # y_pred_lr = (y_prob >= 0.5).astype(int)
 
@@ -626,11 +626,11 @@ if categorical_cols:
 
 
 
-#Create and train XGB model
-model = XGBClassifier(n_estimators = 100, learning_rate = 0.1, max_depth = 5, random_state = 42)
-model.fit(X_train,Y_train)
+XGB = XGBClassifier(n_estimators=100, random_state = 42)
+XGB.fit(X_train, Y_train)
 
-y_pred = model.predict(x_test)
+
+y_pred = XGB.predict(x_test)
 
 #Evaluate performance
 # Ensure the necessary variables exist (run the Logistic Regression training & prediction cells first)
@@ -641,8 +641,8 @@ except NameError as e:
     raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
 
 # If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(model, 'predict_proba'):
-    y_prob = model.predict_proba(x_test)[:, 1]
+if hasattr(XGB, 'predict_proba'):
+    y_prob = XGB.predict_proba(x_test)[:, 1]
     # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
     # y_pred_lr = (y_prob >= 0.5).astype(int)
 
