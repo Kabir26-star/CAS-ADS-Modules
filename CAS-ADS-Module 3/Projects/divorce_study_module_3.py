@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-19T22:38:36.416Z
+Conversion Date: 2025-11-19T22:50:07.318Z
 """
 
 import pandas as pd
@@ -671,11 +671,11 @@ if categorical_cols:
 
 
 
-XGB = XGBClassifier(n_estimators=100, random_state = 42)
-XGB.fit(X_train, Y_train)
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, Y_train)
 
 
-y_pred = XGB.predict(x_test)
+y_pred = rf.predict(x_test)
 
 #Evaluate performance
 # Ensure the necessary variables exist (run the Logistic Regression training & prediction cells first)
@@ -686,8 +686,8 @@ except NameError as e:
     raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
 
 # If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(XGB, 'predict_proba'):
-    y_prob = XGB.predict_proba(x_test)[:, 1]
+if hasattr(rf, 'predict_proba'):
+    y_prob = rf.predict_proba(x_test)[:, 1]
     # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
     # y_pred_lr = (y_prob >= 0.5).astype(int)
 
