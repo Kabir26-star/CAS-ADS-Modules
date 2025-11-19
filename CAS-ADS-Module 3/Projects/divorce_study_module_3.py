@@ -595,7 +595,7 @@ if hasattr(model, 'predict_proba'):
 
 # Build labels dynamically
 labels = np.unique(np.concatenate([y_true, y_pred_lr]))
-display_labels = ["No Mental Issues" if l == 0 else "Mental Issues" for l in labels]
+display_labels = ["Non Divorced" if l == 0 else "Divorced" for l in labels]
 
 # Confusion matrix
 cm = confusion_matrix(y_true, y_pred_lr, labels=labels)
@@ -649,7 +649,7 @@ if hasattr(model, 'predict_proba'):
 
 # Build labels dynamically
 labels = np.unique(np.concatenate([y_true, y_pred_lr]))
-display_labels = ["No Infedility" if l == 0 else "Indedility" for l in labels]
+display_labels = ["Non Divorced" if l == 0 else "Divorced" for l in labels]
 
 # Confusion matrix
 cm = confusion_matrix(y_true, y_pred_lr, labels=labels)
@@ -702,7 +702,7 @@ if hasattr(model, 'predict_proba'):
 
 # Build labels dynamically
 labels = np.unique(np.concatenate([y_true, y_pred_lr]))
-display_labels = ["No Attendance" if l == 0 else "Attendance" for l in labels]
+display_labels = ["Non Divorced" if l == 0 else "Divorced" for l in labels]
 
 # Confusion matrix
 cm = confusion_matrix(y_true, y_pred_lr, labels=labels)
@@ -710,7 +710,7 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels
 
 fig, ax = plt.subplots(figsize=(10, 6))
 disp.plot(ax=ax, cmap='Blues', values_format='d')
-plt.title("Confusion Matrix - Logistic Regression (Infidelity Occurance)")
+plt.title("Confusion Matrix - Logistic Regression (Counseling Attended)")
 plt.show()
 
 #Evaluate performance
