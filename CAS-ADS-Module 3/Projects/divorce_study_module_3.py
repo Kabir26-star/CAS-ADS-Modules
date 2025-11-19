@@ -29,7 +29,7 @@ df
 df_copy = df.copy()
 
 print("Dataset copied successfully to df_copy.")
-display(df_copy.head(10))
+print(df_copy.head(10))
 
 # Visualize continuous variables with histograms (excluding 'divorced') by divorced status
 continuous_cols = df_copy.select_dtypes(include=np.number).drop(columns=['divorced'])
@@ -534,8 +534,8 @@ print(f"R^2: {r2:.4f}")
 
 plt.scatter(y_test, y_pred)
 plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
-plt.xlabel("Actual Trust Score")
-plt.ylabel("Predicted Trust Score")
+plt.xlabel("Actual Communication Score")
+plt.ylabel("Predicted Communication Score")
 plt.title("Actual vs Predicted Communication Score (XGBoost)")
 plt.grid(True)
 plt.show()
