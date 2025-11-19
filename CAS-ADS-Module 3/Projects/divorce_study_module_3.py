@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-19T14:40:03.082Z
+Conversion Date: 2025-11-19T20:17:43.599Z
 """
 
 import pandas as pd
@@ -13,6 +13,7 @@ from scipy import stats
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from xgboost import XGBClassifier, XGBRegressor
 from sklearn.svm import SVR
@@ -540,7 +541,7 @@ plt.grid(True)
 plt.show()
 
 
-# **Machine Learning using Logistic Regression**
+# **Machine Learning using Random Forest**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
@@ -558,7 +559,7 @@ if categorical_cols:
 
 
 
-model = LogisticRegression(max_iter = 1000)
+model = RandomForestClassifier(n_estimators=100, random_state= 42)
 model.fit(X_train, Y_train)
 
 y_pred = model.predict(x_test)
@@ -597,7 +598,7 @@ cm = confusion_matrix(y_true, y_pred_lr, labels=labels)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels)
 fig, ax = plt.subplots(figsize=(6,6))
 disp.plot(ax=ax, cmap='Blues', values_format='d')
-plt.title('Confusion Matrix - (Logistic Regression)')
+plt.title('Confusion Matrix')
 plt.show()
 
 # Print classification metrics
@@ -606,7 +607,7 @@ print('\nClassification Report:\n')
 print(classification_report(y_true, y_pred_lr, labels=labels, target_names=display_labels))
 
 
-# **Machine Learning Algorithm using Logistic Regression**
+# **Machine Learning Algorithm using XGBoost**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
@@ -625,9 +626,8 @@ if categorical_cols:
 
 
 #Create and train Logistic Regression model
-model = LogisticRegression(max_iter = 1000)
-model.fit(X_train, Y_train)
-
+model = XGBClassifier(n_estimators = 100, learning_rate = 0.1, max_depth = 5, random_state = 42)
+model.fit(X_train,Y_train)
 
 y_pred = model.predict(x_test)
 
@@ -655,7 +655,7 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels
 
 fig, ax = plt.subplots(figsize=(10, 6))
 disp.plot(ax=ax, cmap='Blues', values_format='d')
-plt.title("Confusion Matrix - Logistic Regression (Mental Health)")
+plt.title("Confusion Matrix - Mental Health")
 plt.show()
 
 #Evaluate performance
@@ -680,7 +680,7 @@ if categorical_cols:
 
 
 #Create and train Logistic Regression model
-model = LogisticRegression(max_iter = 1000)
+model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, Y_train)
 
 y_pred = model.predict(x_test)
@@ -709,7 +709,7 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels
 
 fig, ax = plt.subplots(figsize=(10, 6))
 disp.plot(ax=ax, cmap='Blues', values_format='d')
-plt.title("Confusion Matrix - Logistic Regression (Infidelity Occurance)")
+plt.title("Confusion Matrix - Infidelity Occurance")
 plt.show()
 
 #Evaluate performance
@@ -733,7 +733,7 @@ if categorical_cols:
     X_train, x_test = X_train.align(x_test, join='left', axis=1, fill_value=0)
 
 #Create and train Logistic Regression model
-model = LogisticRegression(max_iter = 1000)
+model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, Y_train)
 
 y_pred = model.predict(x_test)
@@ -762,7 +762,7 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels
 
 fig, ax = plt.subplots(figsize=(10, 6))
 disp.plot(ax=ax, cmap='Blues', values_format='d')
-plt.title("Confusion Matrix - Logistic Regression (Counseling Attended)")
+plt.title("Confusion Matrix - Counseling Attended")
 plt.show()
 
 #Evaluate performance
