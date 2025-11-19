@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-19T20:48:44.257Z
+Conversion Date: 2025-11-19T22:38:36.416Z
 """
 
 import pandas as pd
@@ -328,12 +328,9 @@ Scaler = StandardScaler()
 X_train_scaled = Scaler.fit_transform(X_train_encoded)
 x_test_scaled = Scaler.transform(x_test_encoded)
 
-Model = LinearRegression()
-Model.fit(X_train_scaled, Y_train)
-
-# Make predictions
-y_pred = Model.predict(x_test_scaled)
-
+model = LinearRegression()
+model.fit(X_train_scaled, Y_train)
+y_pred = model.predict(x_test_scaled)
 # Evaluate the model
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
@@ -537,6 +534,54 @@ plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
 plt.xlabel("Actual Communication Score")
 plt.ylabel("Predicted Communication Score")
 plt.title("Actual vs Predicted Communication Score (XGBoost)")
+plt.grid(True)
+plt.show()
+
+
+# **Financial Stress Level**
+
+
+X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
+Y = df['financial_stress_level']
+
+X_train, x_test, Y_train, y_test = train_test_split(X,Y,test_size=0.2, random_state = 42)
+
+# One-hot encode the 'conflict_resolution_style' column
+X_train_encoded = pd.get_dummies(X_train, columns=['conflict_resolution_style'], drop_first=True)
+x_test_encoded = pd.get_dummies(x_test, columns=['conflict_resolution_style'], drop_first=True)
+
+
+xgb = XGBRegressor(
+    n_estimators=300,
+    learning_rate=0.05,
+    max_depth=6,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    random_state=42,
+)
+
+# Fit on encoded numeric features (avoids object dtype errors)
+xgb.fit(X_train_encoded, Y_train)
+
+y_pred = xgb.predict(x_test_encoded)
+
+# Evaluate regression performance for Stress Level
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print("Regression metrics for Stress level (XGBoost):")
+print(f"MSE: {mse:.4f}")
+print(f"RMSE: {rmse:.4f}")
+print(f"MAE: {mae:.4f}")
+print(f"R^2: {r2:.4f}")
+
+plt.scatter(y_test, y_pred)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
+plt.xlabel("Actual Stress Level")
+plt.ylabel("Predicted Stress Level")
+plt.title("Actual vs Predicted Stress Level (XGBoost)")
 plt.grid(True)
 plt.show()
 
