@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-19T11:26:14.767Z
+Conversion Date: 2025-11-19T14:40:03.082Z
 """
 
 import pandas as pd
@@ -299,7 +299,7 @@ for col in categorical_cols:
     plt.tight_layout()
     plt.show()
 
-# Age Distribution
+# **Age Distribution**
 
 
 sns.histplot(x='age_at_marriage', data=df_copy, kde=True, stat='density', bins=30)
@@ -346,7 +346,7 @@ plt.title("Predicted Duration of Marriage")
 plt.grid(True)
 plt.show()
 
-# **Machine Learning Algorithm for Divorce**
+# **Divorce Status**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history',    'trust_score'], axis=1)
@@ -393,7 +393,7 @@ plt.title("Actual vs Predicted Divorce Status")
 plt.grid(True)
 plt.show()
 
-# **Machine Learning Algorithm for Social Support**
+# **Social Support**
 
 
 X = df.drop(['num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended', 'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history',    'trust_score'], axis=1)
@@ -431,8 +431,8 @@ plt.title("Actual vs Predicted Social Support Status")
 plt.grid(True)
 plt.show()
 
-# **Machine Learning Algorithm for Trust Score**
-# **XGBoost**
+# **Trust Score**
+# 
 
 
 X = df.drop(['num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended', 'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
@@ -488,7 +488,59 @@ plt.grid(True)
 plt.show()
 
 
-# Machine Learning using Logistic Regression
+# **Communication Score**
+
+
+X = df.drop(['num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',   'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended', 'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
+Y = df['communication_score']
+
+X_train, x_test, Y_train, y_test = train_test_split(X,Y,test_size=0.2, random_state = 42)
+
+# One-hot encode the 'conflict_resolution_style' column
+X_train_encoded = pd.get_dummies(X_train, columns=['conflict_resolution_style'], drop_first=True)
+x_test_encoded = pd.get_dummies(x_test, columns=['conflict_resolution_style'], drop_first=True)
+
+Scaler = StandardScaler()
+X_train_scaled = Scaler.fit_transform(X_train_encoded)
+x_test_scaled = Scaler.transform(x_test_encoded)
+
+xgb = XGBRegressor(
+    n_estimators=300,
+    learning_rate=0.05,
+    max_depth=6,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    random_state=42,
+)
+
+# Fit on encoded numeric features (avoids object dtype errors)
+xgb.fit(X_train_encoded, Y_train)
+
+
+y_pred = xgb.predict(x_test_encoded)
+
+# Evaluate regression performance for Trust Score
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print("Regression metrics for Communication Score (XGBoost):")
+print(f"MSE: {mse:.4f}")
+print(f"RMSE: {rmse:.4f}")
+print(f"MAE: {mae:.4f}")
+print(f"R^2: {r2:.4f}")
+
+plt.scatter(y_test, y_pred)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
+plt.xlabel("Actual Trust Score")
+plt.ylabel("Predicted Trust Score")
+plt.title("Actual vs Predicted Communication Score (XGBoost)")
+plt.grid(True)
+plt.show()
+
+
+# **Machine Learning using Logistic Regression**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
@@ -554,7 +606,7 @@ print('\nClassification Report:\n')
 print(classification_report(y_true, y_pred_lr, labels=labels, target_names=display_labels))
 
 
-# Machine Learning Algorithm using Logistic Regression
+# **Machine Learning Algorithm using Logistic Regression**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
@@ -610,7 +662,7 @@ plt.show()
 print(accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-# Infedility occured
+# **Infedility occured**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
@@ -664,7 +716,7 @@ plt.show()
 print(accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-# Counseling Attendance
+# **Counseling Attendance**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
@@ -717,7 +769,7 @@ plt.show()
 print(accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-# Machine Learning algorithm using Decision Tree
+# **Machine Learning algorithm using Decision Tree**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
