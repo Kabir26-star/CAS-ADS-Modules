@@ -54,6 +54,6 @@ Or run it in the terminal:
 <h1>Python files</h1>
 <b>python filename.py</b>
 
-<h1>Reading Materials</h1>
-<b>cat filename</b>
+<h1>Reminder</h1>
+<p> For lecture files(PDF), you will need to manually navigate into the folder and read the documents</p> 
 
