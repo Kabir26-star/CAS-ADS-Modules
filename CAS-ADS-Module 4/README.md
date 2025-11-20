@@ -1,7 +1,7 @@
 # CAS Applied Data Science – Module 4: Ethics and Best Practices
 
 
-<p>This Module contains a collection of PDF files related to this module.  
+<p>This module contains a collection of PDF files related to this module.  
 Each PDF is included for reference, documentation, study, or reporting purposes.</p>
 
 ---
