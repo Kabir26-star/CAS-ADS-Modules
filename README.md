@@ -9,6 +9,7 @@
 <li>Module 4 - Ethics and Best Practices(Consists of Reading Meterials)</li>
 <li>Module 5 - Peer Review, ML Review and Final Project Concept</li>
 <li>Module 6 - Deep Learning & Final Project(Consists of Reading Materials)</li>
+<li>Final Project</li>
 
 </ul>
 
