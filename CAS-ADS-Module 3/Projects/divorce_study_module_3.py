@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-19T22:50:07.318Z
+Conversion Date: 2025-11-20T09:12:17.348Z
 """
 
 import pandas as pd
@@ -370,11 +370,21 @@ print("Data successfully one-hot encoded.")
 print(X_train_encoded.head())
 print(x_test_encoded.head())
 
-model = LinearRegression()
-model.fit(X_train_scaled, Y_train)
+xgb = XGBRegressor(
+    n_estimators=300,
+    learning_rate=0.05,
+    max_depth=6,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    random_state=42,
+)
+
+# Fit on encoded numeric features (avoids object dtype errors)
+xgb.fit(X_train_encoded, Y_train)
+
 
 # Make predictions
-y_pred = model.predict(x_test_scaled)
+y_pred = xgb.predict(x_test_scaled)
 
 # Evaluate the model
 mse = mean_squared_error(y_test, y_pred)
@@ -384,6 +394,7 @@ print(f"Mean Squared Error: {mse:.4f}")
 print(f"R-squared: {r2:.4f}")
 
 plt.figure(figsize = (10,6))
+plt.scatter(y_test, y_pred, color = 'blue', alpha=0.6)
 sns.regplot(x=y_test, y=y_pred, color = 'red')
 plt.xlabel("Actual Divorce Status")
 plt.ylabel("Predicted Divorce Status")
@@ -403,15 +414,23 @@ X_train, x_test, Y_train, y_test = train_test_split(X,Y,test_size=0.2, random_st
 X_train_encoded = pd.get_dummies(X_train, columns=['conflict_resolution_style'], drop_first=True)
 x_test_encoded = pd.get_dummies(x_test, columns=['conflict_resolution_style'], drop_first=True)
 
-Scaler = StandardScaler()
-X_train_scaled = Scaler.fit_transform(X_train_encoded)
-x_test_scaled = Scaler.transform(x_test_encoded)
 
-Model = LinearRegression()
-Model.fit(X_train_scaled, Y_train)
+
+xgb = XGBRegressor(
+    n_estimators=300,
+    learning_rate=0.05,
+    max_depth=6,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    random_state=42,
+)
+
+# Fit on encoded numeric features (avoids object dtype errors)
+xgb.fit(X_train_encoded, Y_train)
+
 
 # Make predictions
-y_pred = Model.predict(x_test_scaled)
+y_pred = xgb.predict(x_test_encoded)
 
 # Evaluate the model
 mse = mean_squared_error(y_test, y_pred)
@@ -653,7 +672,7 @@ print('\nClassification Report:\n')
 print(classification_report(y_true, y_pred_lr, labels=labels, target_names=display_labels))
 
 
-# **Machine Learning Algorithm using XGBoost**
+# **Machine Learning Algorithm using Random Forest**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
