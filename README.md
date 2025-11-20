@@ -1,59 +1,14 @@
 # CAS-ADS-Modules
-<p> This repository contains CAS Materials and Projects. The instructions below, informs how to execute the python files and materials via Gitbash</p>
+<p> This repository consolidates the material for the CAS Applied Data Science modules. Each module has its own folder (Module 1 - Module 6) with lecture notes, exercises, datasets, or slide decks, plus a README that documents the local structure so you can quickly locate resources.</p>
 
-# 🧭 Guidelines
+# Repository Guidelines
+<ul>
+<li>Module 1 - Data Acquisition and Management(Consists of Notes, Projects and Tutorials)</li>
+<li>Module 2 - Statistical Interface for Data Science(Consists of Notes, Tutorials and Projects)</li>
+<li>Module 3 - Data Analysis and Machine Learning(Consists of Notes, Exercises and Projects)</li>
+<li>Module 4 - Ethics and Best Practices(Consists of Reading Meterials)</li>
+<li>Module 5 - Peer Review, ML Review and Final Project Concept</li>
+<li>Module 6 - Deep Learning & Final Project(Consists of Reading Materials)</li>
 
-# 1. Install Required Tools
-
-Download and install Git Bash from https://git-scm.com/downloads
-
-Install Visual Studio Code (VS Code) from https://code.visualstudio.com
-
-Install Python from https://python.org/downloads
- (if not already installed)
-
-# 2. Clone the GitHub Repository
-
-Open Git Bash.
-
-Navigate to the folder where you want to save the project:
-
-<b>cd Documents/Projects</b>
-
-
-Run the clone command (replace with your repository link):
-
-<b>git clone https://github.com/yourusername/your-repository.git</b>
-
-# 3. Open the Project in Visual Studio Code
-
-In Git Bash, navigate into the cloned folder:
-
-<b>cd your-repository</b>
-
-
-Launch VS Code directly from Git Bash:
-
-code .
-
-
-(Alternatively, open VS Code → File → Open Folder → select your project folder.)
-
-# 4. Run the Python Files
-
-In VS Code, open the .py file you want to run.
-
-Make sure Python is installed and selected as the interpreter.
-
-Run the file using one of these options:
-
-Click the Run ▶ button at the top-right corner
-
-Or run it in the terminal:
-
-<h1>Python files</h1>
-<b>python filename.py</b>
-
-<h1>Reminder</h1>
-<p> For lecture files(PDF), you will need to manually navigate into the folder and read the documents</p> 
+</ul>
 
