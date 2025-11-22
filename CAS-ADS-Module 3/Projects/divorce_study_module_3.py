@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-21T12:46:04.531Z
+Conversion Date: 2025-11-22T22:28:57.310Z
 """
 
 import pandas as pd
@@ -11,13 +11,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from xgboost import XGBClassifier, XGBRegressor
-from sklearn.svm import SVR
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
@@ -552,8 +548,8 @@ except NameError as e:
     raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
 
 # If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(xgb, 'predict_proba'):
-    y_prob = xgb.predict_proba(x_test)[:, 1]
+if hasattr(y_pred, 'predict_proba'):
+    y_prob = y_pred.predict_proba(x_test)[:, 1]
     # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
     # y_pred_lr = (y_prob >= 0.5).astype(int)
 
@@ -587,7 +583,7 @@ print('\nClassification Report:\n')
 print(classification_report(y_true, y_pred_lr, labels=labels, target_names=display_labels))
 
 
-# **Machine Learning Algorithm using XGBoost**
+# **Machine Learning Algorithm using Random Forest**
 
 
 X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
@@ -605,20 +601,11 @@ if categorical_cols:
 
 
 
-xgb = XGBClassifier(
-    n_estimators = 100, 
-    random_state = 42,
-    learning_rate = 0.1,
-    max_depth = 5,
-    subsample = 0.8,
-    colsample_bytree = 0.8,
+#Create and train Random Forest model
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, Y_train)
 
-    
-
-)
-xgb.fit(X_train, Y_train)
-
-y_pred = xgb.predict(x_test)
+pred = rf.predict(x_test)
 
 #Evaluate performance
 # Ensure the necessary variables exist (run the Logistic Regression training & prediction cells first)
@@ -629,8 +616,8 @@ except NameError as e:
     raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
 
 # If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(xgb, 'predict_proba'):
-    y_prob = xgb.predict_proba(x_test)[:, 1]
+if hasattr(pred, 'predict_proba'):
+    y_prob = pred.predict_proba(x_test)[:, 1]
     # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
     # y_pred_lr = (y_prob >= 0.5).astype(int)
 
@@ -672,7 +659,7 @@ if categorical_cols:
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, Y_train)
 
-y_pred = model.predict(x_test)
+rf = model.predict(x_test)
 
 #Evaluate performance
 # Ensure the necessary variables exist (run the Logistic Regression training & prediction cells first)
@@ -683,8 +670,8 @@ except NameError as e:
     raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
 
 # If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(model, 'predict_proba'):
-    y_prob = model.predict_proba(x_test)[:, 1]
+if hasattr(rf, 'predict_proba'):
+    y_prob = rf.predict_proba(x_test)[:, 1]
     # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
     # y_pred_lr = (y_prob >= 0.5).astype(int)
 
@@ -725,7 +712,7 @@ if categorical_cols:
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, Y_train)
 
-y_pred = model.predict(x_test)
+predictions = model.predict(x_test)
 
 #Evaluate performance
 # Ensure the necessary variables exist (run the Logistic Regression training & prediction cells first)
@@ -736,8 +723,8 @@ except NameError as e:
     raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
 
 # If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(model, 'predict_proba'):
-    y_prob = model.predict_proba(x_test)[:, 1]
+if hasattr(predictions, 'predict_proba'):
+    y_prob = predictions.predict_proba(x_test)[:, 1]
     # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
     # y_pred_lr = (y_prob >= 0.5).astype(int)
 
