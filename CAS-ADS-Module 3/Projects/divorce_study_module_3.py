@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-22T22:28:57.310Z
+Conversion Date: 2025-11-24T21:19:49.468Z
 """
 
 import pandas as pd
@@ -12,6 +12,8 @@ import seaborn as sns
 from scipy import stats
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from imblearn.over_sampling import SMOTE
+from sklearn.preprocessing import LabelEncoder
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from xgboost import XGBClassifier, XGBRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
@@ -365,9 +367,7 @@ X_train, x_test, Y_train, y_test = train_test_split(X,Y,test_size=0.2, random_st
 X_train_encoded = pd.get_dummies(X_train, columns=['conflict_resolution_style'], drop_first=True)
 x_test_encoded = pd.get_dummies(x_test, columns=['conflict_resolution_style'], drop_first=True)
 
-Scaler = StandardScaler()
-X_train_scaled = Scaler.fit_transform(X_train_encoded)
-x_test_scaled = Scaler.transform(x_test_encoded)
+
 
 xgb = XGBRegressor(
     n_estimators=300,
@@ -586,111 +586,45 @@ print(classification_report(y_true, y_pred_lr, labels=labels, target_names=displ
 # **Machine Learning Algorithm using Random Forest**
 
 
-X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
-Y = df['mental_health_issues']
+X = df.drop(['education_level'], axis=1)
+y = df['education_level']
 
-X_train, x_test, Y_train, y_test = train_test_split(X,Y, test_size=0.2, random_state=42)
+# Encode target labels if categorical
+le = LabelEncoder()
+y = le.fit_transform(y)
 
-# Encode categorical columns (if any) before scaling
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
 categorical_cols = X_train.select_dtypes(include=['object','category']).columns.tolist()
+
 if categorical_cols:
     X_train = pd.get_dummies(X_train, columns=categorical_cols, drop_first=True)
-    x_test = pd.get_dummies(x_test, columns=categorical_cols, drop_first=True)
-    # Align columns so train/test have same features (missing columns in test filled with 0)
-    X_train, x_test = X_train.align(x_test, join='left', axis=1, fill_value=0)
+    X_test = pd.get_dummies(X_test, columns=categorical_cols, drop_first=True)
+
+    # Align train/test columns
+    X_train, X_test = X_train.align(X_test, join='left', axis=1, fill_value=0)
 
 
+rf = RandomForestClassifier(
+    n_estimators=300,
+    class_weight="balanced",
+    random_state=42
+)
+rf.fit(X_test, y_test)
 
-#Create and train Random Forest model
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
-rf.fit(X_train, Y_train)
+y_pred = rf.predict(X_test)
 
-pred = rf.predict(x_test)
-
-#Evaluate performance
-# Ensure the necessary variables exist (run the Logistic Regression training & prediction cells first)
-try:
-    y_true = y_test
-    y_pred_lr = y_pred
-except NameError as e:
-    raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
-
-# If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(pred, 'predict_proba'):
-    y_prob = pred.predict_proba(x_test)[:, 1]
-    # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
-    # y_pred_lr = (y_prob >= 0.5).astype(int)
-
-# Build labels dynamically
-labels = np.unique(np.concatenate([y_true, y_pred_lr]))
-display_labels = ["Non Divorced" if l == 0 else "Divorced" for l in labels]
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred, target_names=le.classes_))
 
 # Confusion matrix
-cm = confusion_matrix(y_true, y_pred_lr, labels=labels)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels)
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=le.classes_)
 
-fig, ax = plt.subplots(figsize=(10, 6))
-disp.plot(ax=ax, cmap='Blues', values_format='d')
-plt.title("Confusion Matrix - Mental Health")
+fig, ax = plt.subplots(figsize=(12, 7))
+disp.plot(ax=ax, cmap='Blues')
+plt.title("Confusion Matrix - Education Level Prediction")
 plt.show()
-
-#Evaluate performance
-print(accuracy_score(y_test, y_pred))
-print(classification_report(y_test, y_pred))
-
-# **Infedility occured**
-
-
-X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'counseling_attended',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
-Y = df['infidelity_occurred']
-
-X_train, x_test, Y_train, y_test = train_test_split(X,Y, test_size=0.2, random_state=42)
-
-# Encode categorical columns (if any) before scaling
-categorical_cols = X_train.select_dtypes(include=['object','category']).columns.tolist()
-if categorical_cols:
-    X_train = pd.get_dummies(X_train, columns=categorical_cols, drop_first=True)
-    x_test = pd.get_dummies(x_test, columns=categorical_cols, drop_first=True)
-    # Align columns so train/test have same features (missing columns in test filled with 0)
-    X_train, x_test = X_train.align(x_test, join='left', axis=1, fill_value=0)
-
-
-#Create and train Random Forest model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, Y_train)
-
-rf = model.predict(x_test)
-
-#Evaluate performance
-# Ensure the necessary variables exist (run the Logistic Regression training & prediction cells first)
-try:
-    y_true = y_test
-    y_pred_lr = y_pred
-except NameError as e:
-    raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
-
-# If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(rf, 'predict_proba'):
-    y_prob = rf.predict_proba(x_test)[:, 1]
-    # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
-    # y_pred_lr = (y_prob >= 0.5).astype(int)
-
-# Build labels dynamically
-labels = np.unique(np.concatenate([y_true, y_pred_lr]))
-display_labels = ["Non Divorced" if l == 0 else "Divorced" for l in labels]
-
-# Confusion matrix
-cm = confusion_matrix(y_true, y_pred_lr, labels=labels)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels)
-
-fig, ax = plt.subplots(figsize=(10, 6))
-disp.plot(ax=ax, cmap='Blues', values_format='d')
-plt.title("Confusion Matrix - Infidelity Occurance")
-plt.show()
-
-#Evaluate performance
-print(accuracy_score(y_test, y_pred))
-print(classification_report(y_test, y_pred))
 
 # **Counseling Attendance**
 
