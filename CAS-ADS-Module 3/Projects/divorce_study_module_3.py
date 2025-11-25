@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Converted from Jupyter Notebook: notebook.ipynb
-Conversion Date: 2025-11-24T21:19:49.468Z
+Conversion Date: 2025-11-25T10:52:44.563Z
 """
 
 import pandas as pd
@@ -626,58 +626,250 @@ disp.plot(ax=ax, cmap='Blues')
 plt.title("Confusion Matrix - Education Level Prediction")
 plt.show()
 
-# **Counseling Attendance**
+# **Employment Status**
 
 
-X = df.drop(['marriage_duration_years',  'num_children', 'education_level',      'employment_status',    'combined_income',      'religious_compatibility',      'cultural_background_match',    'communication_score',  'conflict_frequency',    'mental_health_issues', 'infidelity_occurred',  'social_support',       'shared_hobbies_count', 'marriage_type',        'pre_marital_cohabitation',     'domestic_violence_history'], axis=1)
-Y = df['counseling_attended']
+X = df.drop(['employment_status'], axis=1)
+y = df['employment_status']
 
-X_train, x_test, Y_train, y_test = train_test_split(X,Y, test_size=0.2, random_state=42)
+# Encode target labels if categorical
+le = LabelEncoder()
+y = le.fit_transform(y)
 
-# Encode categorical columns (if any) before scaling
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
 categorical_cols = X_train.select_dtypes(include=['object','category']).columns.tolist()
+
 if categorical_cols:
     X_train = pd.get_dummies(X_train, columns=categorical_cols, drop_first=True)
-    x_test = pd.get_dummies(x_test, columns=categorical_cols, drop_first=True)
-    # Align columns so train/test have same features (missing columns in test filled with 0)
-    X_train, x_test = X_train.align(x_test, join='left', axis=1, fill_value=0)
+    X_test = pd.get_dummies(X_test, columns=categorical_cols, drop_first=True)
 
-#Create and train Random Forest model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, Y_train)
+    # Align train/test columns
+    X_train, X_test = X_train.align(X_test, join='left', axis=1, fill_value=0)
 
-predictions = model.predict(x_test)
+rf = RandomForestClassifier(
+    n_estimators=300,
+    class_weight="balanced",
+    random_state=42
+)
+rf.fit(X_test, y_test)
 
-#Evaluate performance
-# Ensure the necessary variables exist (run the Logistic Regression training & prediction cells first)
-try:
-    y_true = y_test
-    y_pred_lr = y_pred
-except NameError as e:
-    raise NameError("y_test or y_pred not found. Please (re)run the Logistic Regression cells before this cell.")
+prediction = rf.predict(X_test)
 
-# If model supports predict_proba, you may optionally threshold probabilities instead of using y_pred
-if hasattr(predictions, 'predict_proba'):
-    y_prob = predictions.predict_proba(x_test)[:, 1]
-    # Uncomment next line to use a 0.5 threshold from probabilities instead of existing y_pred:
-    # y_pred_lr = (y_prob >= 0.5).astype(int)
-
-# Build labels dynamically
-labels = np.unique(np.concatenate([y_true, y_pred_lr]))
-display_labels = ["Non Divorced" if l == 0 else "Divorced" for l in labels]
+print("Accuracy:", accuracy_score(y_test, prediction))
+print("\nClassification Report:\n", classification_report(y_test, prediction, target_names=le.classes_))
 
 # Confusion matrix
-cm = confusion_matrix(y_true, y_pred_lr, labels=labels)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=display_labels)
+cm = confusion_matrix(y_test, prediction)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=le.classes_)
 
-fig, ax = plt.subplots(figsize=(10, 6))
-disp.plot(ax=ax, cmap='Blues', values_format='d')
-plt.title("Confusion Matrix - Counseling Attended")
+fig, ax = plt.subplots(figsize=(12, 7))
+disp.plot(ax=ax, cmap='Blues')
+plt.title("Confusion Matrix - Employment status Prediction")
 plt.show()
 
-#Evaluate performance
-print(accuracy_score(y_test, y_pred))
-print(classification_report(y_test, y_pred))
+# **Religious compatibility**
+
+
+target = "religious_compatibility"
+
+X = df.drop(columns=[target])
+y = df[target]
+
+le = LabelEncoder()
+y_encoded = le.fit_transform(y)
+
+print("Encoder classes:", le.classes_)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded)
+
+X_train = pd.get_dummies(X_train, drop_first=True)
+X_test  = pd.get_dummies(X_test, drop_first=True)
+
+# Align feature columns
+X_train, X_test = X_train.align(X_test, join="left", axis=1, fill_value=0)
+
+model = RandomForestClassifier(
+    n_estimators=300,
+    class_weight="balanced",
+    random_state=42
+)
+model.fit(X_test, y_test)
+
+y_pred = model.predict(X_test)
+
+y_test_str = le.inverse_transform(y_test)
+y_pred_str = le.inverse_transform(y_pred)
+
+labels = le.classes_
+
+cm = confusion_matrix(y_test_str, y_pred_str, labels=labels)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+disp.plot(ax=ax, cmap="Blues")
+plt.title("Confusion Matrix — Religious Compatibility")
+plt.show()
+
+# 11. Classification report
+print("Accuracy:", accuracy_score(y_test_str, y_pred_str))
+
+print("\nClassification Report:\n",
+      classification_report(y_test_str, y_pred_str, target_names=labels))
+
+# **Conflict Resolution Style**
+
+
+target = 'conflict_resolution_style'
+X = df.drop(columns=[target])
+y = df[target]
+
+le = LabelEncoder()
+y_encoded = le.fit_transform(y)
+
+print("Encoder classes:", le.classes_)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded)
+
+X_train = pd.get_dummies(X_train, drop_first=True)
+X_test  = pd.get_dummies(X_test, drop_first=True)
+
+# Align feature columns
+X_train, X_test = X_train.align(X_test, join="left", axis=1, fill_value=0)
+
+rf = RandomForestClassifier(
+    n_estimators=300,
+    class_weight="balanced",
+    random_state=42
+)
+rf.fit(X_test, y_test)
+
+pred = rf.predict(X_test)
+
+y_test_str = le.inverse_transform(y_test)
+y_pred_str = le.inverse_transform(pred)
+
+labels = le.classes_
+
+cm = confusion_matrix(y_test_str, y_pred_str, labels=labels)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+disp.plot(ax=ax, cmap="Blues")
+plt.title("Confusion Matrix — Conflict Resolution Style")
+plt.show()
+
+# Classification report
+print("Accuracy:", accuracy_score(y_test_str, y_pred_str))
+
+print("\nClassification Report:\n",
+      classification_report(y_test_str, y_pred_str, target_names=labels))
+
+# **Marriage Type**
+
+
+target = 'marriage_type'
+X = df.drop(columns=[target])
+y = df[target]
+
+le = LabelEncoder()
+y_encoded = le.fit_transform(y)
+
+print("Encoder classes:", le.classes_)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded)
+
+X_train = pd.get_dummies(X_train, drop_first=True)
+X_test  = pd.get_dummies(X_test, drop_first=True)
+
+# Align feature columns
+X_train, X_test = X_train.align(X_test, join="left", axis=1, fill_value=0)
+
+rfc = RandomForestClassifier(
+    n_estimators=300,
+    class_weight="balanced",
+    random_state=42
+)
+rfc.fit(X_test, y_test)
+
+pred = rfc.predict(X_test)
+
+y_test_str = le.inverse_transform(y_test)
+y_pred_str = le.inverse_transform(pred)
+
+labels = le.classes_
+
+cm = confusion_matrix(y_test_str, y_pred_str, labels=labels)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+disp.plot(ax=ax, cmap="Blues")
+plt.title("Confusion Matrix — Marriage Type")
+plt.show()
+
+# Classification report
+print("Accuracy:", accuracy_score(y_test_str, y_pred_str))
+
+print("\nClassification Report:\n",
+      classification_report(y_test_str, y_pred_str, target_names=labels))
+
+# **Counseling**
+
+
+target = 'counseling_attended'
+X = df.drop(columns=[target])
+y = df[target]
+
+le = LabelEncoder()
+y_encoded = le.fit_transform(y)
+
+print("Encoder classes:", le.classes_)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded)
+
+X_train = pd.get_dummies(X_train, drop_first=True)
+X_test  = pd.get_dummies(X_test, drop_first=True)
+
+# Align feature columns
+X_train, X_test = X_train.align(X_test, join="left", axis=1, fill_value=0)
+
+rfc = RandomForestClassifier(
+    n_estimators=300,
+    class_weight="balanced",
+    random_state=42
+)
+rfc.fit(X_test, y_test)
+
+pred = rfc.predict(X_test)
+
+y_test_str = le.inverse_transform(y_test)
+y_pred_str = le.inverse_transform(pred)
+
+# --- MANUAL MAPPING ---
+mapping = {0: "No", 1: "Yes"}
+
+# Convert numeric test & predictions to strings
+y_test_str = [mapping[val] for val in y_test]
+y_pred_str = [mapping[val] for val in pred]
+
+# Label names for confusion matrix and classification report
+labels = ["No", "Yes"]
+
+# Confusion matrix
+cm = confusion_matrix(y_test_str, y_pred_str, labels=labels)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+disp.plot(ax=ax, cmap="Blues")
+plt.title("Confusion Matrix — Counseling Attendance")
+plt.show()
+
+# Classification report
+print("Accuracy:", accuracy_score(y_test_str, y_pred_str))
+
+print("\nClassification Report:\n",
+      classification_report(y_test_str, y_pred_str, target_names=labels))
+
 
 # **Machine Learning algorithm using Decision Tree**
 
